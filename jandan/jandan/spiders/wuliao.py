@@ -8,9 +8,9 @@ from scrapy.settings import default_settings
 
 
 class OoxxSpider(scrapy.Spider):
-    name = 'ooxx'
+    name = 'wuliao'
     allowed_domains = ['jandan.net']
-    start_urls = ['http://jandan.net/ooxx']
+    start_urls = ['http://jandan.net/pic']
 
     def parse(self, response):
         # fetch current page's all li elements

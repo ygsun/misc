@@ -7,30 +7,30 @@
 
 import scrapy
 from scrapy.loader import ItemLoader
-from scrapy.loader.processors import TakeFirst, Compose
-from scrapy.utils.misc import arg_to_iter
+from scrapy.loader.processors import TakeFirst, MapCompose
 
 
-class ChoiceOnePic(object):
-    def __call__(self, values):
-        for value in values:
-            if value is not None and value != '':
-                return arg_to_iter(value)
-
-
-class AddScheme(object):
-    def __call__(self, values, loader_context):
-        response = loader_context.get('response')
-        return [response.urljoin(url) for url in values]
+def add_schema(url, loader_context):
+    response = loader_context['response']
+    if response:
+        return response.urljoin(url)
+    else:
+        return 'http:' + url
 
 
 class OoxxItem(scrapy.Item):
-    # define the fields for your item here like:
-    author = scrapy.Field()
-    image_urls = scrapy.Field()
-    images = scrapy.Field()
+    author_name = scrapy.Field()
+    pic_url = scrapy.Field()
+    pub_date = scrapy.Field()
+    result = scrapy.Field()
 
 
 class OoxxItemLoader(ItemLoader):
-    author_out = TakeFirst()
-    image_urls_out = Compose(ChoiceOnePic(), AddScheme())
+    author_name_in = MapCompose(str.strip)
+    author_name_out = TakeFirst()
+
+    pic_url_in = MapCompose(add_schema)
+    # pic_url_out = TakeFirst()
+
+    pub_date_in = MapCompose(str.strip)
+    pub_date_out = TakeFirst()

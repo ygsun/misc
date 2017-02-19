@@ -64,7 +64,11 @@ ROBOTSTXT_OBEY = True
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'jandan.pipelines.JandanPipeline': 300,
+    'jandan.pipelines.URLEmptyPipeline': 300,
+    'jandan.pipelines.URLFilterPipeline': 310,
+    'jandan.pipelines.ConvertDateTimePipeline': 320,
+    'scrapy.pipelines.files.FilesPipeline': 400,
+    'jandan.pipelines.StoreDBPipeline': 500,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -88,8 +92,19 @@ ITEM_PIPELINES = {
 # HTTPCACHE_IGNORE_HTTP_CODES = []
 # HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
+# Export settings
 FEED_EXPORT_ENCODING = 'utf-8'
 
-DOWNLOAD_TIMEOUT = 1
+# URL filters settings
+URLFILTER_INCLUDE = [
+    r'\.sinaimg\.cn',
+]
 
-IMAGES_STORE = '/home/vincent/jandan'
+# File download pipeline settings
+FILES_STORE = r'C:\Python\mysite\jandan\static'
+FILES_URLS_FIELD = 'pic_url'
+FILES_RESULT_FIELD = 'result'
+
+# Database runtime configuration
+# DEVEL or PROD or TESTING
+DB_CONFIG = 'PROD'
